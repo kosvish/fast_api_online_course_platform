@@ -1,1 +1,2 @@
-from .models import Courses as CourseModel
+from .models import CourseModel, UserModel
+from .base import Base
