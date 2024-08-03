@@ -1,0 +1,15 @@
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db import CourseModel
+from .db import get_async_session
+from fastapi import Depends, HTTPException, status
+
+
+async def get_course_by_id(course_id: int, session: AsyncSession = Depends(get_async_session)):
+    query = select(CourseModel).where(CourseModel.id == course_id)
+    course = await session.execute(query)
+    course = course.scalars().one_or_none()
+    if course is None:
+        raise HTTPException(detail="Course not found", status_code=status.HTTP_404_NOT_FOUND)
+    return course

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fastapi-train"
+version = "0.1.0"
+description = ""
+authors = ["mrkoc <mr.kocta@bk.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.111.1"}
+sqlalchemy = {extras = ["asynio"], version = "^2.0.31"}
+aiosqlite = "^0.20.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
