@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from .users import User
 
 
-class UserRelationMixin:
+class RelationMixin:
     _user_unique: bool = False
     _user_nullable: bool = False
     _user_back_populates: str | None = None
