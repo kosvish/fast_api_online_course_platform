@@ -12,6 +12,7 @@ sqlalchemy = {extras = ["asynio"], version = "^2.0.31"}
 aiosqlite = "^0.20.0"
 alembic = "^1.13.2"
 black = "^24.8.0"
+pytest = "^8.3.2"
 
 
 [build-system]
