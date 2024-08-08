@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Depends
-from app.db import base, session
+from fastapi import FastAPI
+from app.db import session
+from app.db.models import base
 from contextlib import asynccontextmanager
 import uvicorn
 from app.api.routes import course_router
