@@ -1,1 +1,2 @@
-from .db import models, base, session
+from .db import models, session
+from .db.models import base
