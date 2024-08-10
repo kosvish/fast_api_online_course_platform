@@ -1,9 +1,6 @@
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.api.dependencies import get_async_session
-from app.db.models import CourseModel, UserModel, CourseUserAssociation
-import asyncio
-from app.db import async_session
+from app.db.models import UserModel
 
 
 async def create_user(
@@ -38,17 +35,15 @@ async def delete_user_by_id(session: AsyncSession, user_id: int):
     stmt = delete(UserModel).where(UserModel.id == user_id)
     await session.execute(stmt)
     await session.commit()
-    print("Удален")
 
 
-async def main():
-    async with async_session() as session:
-        # user = await create_user(session, "Test", "test@gmail.com", "12345")
-        # user = await read_user_by_id(session, 1)
-        # user = await update_user_by_id(
-        #     session, 1, "TestUpdate", "testupdate@gmail.com", "123456"
-        # )
-        # print(user.username)
-        await delete_user_by_id(session, 1)
+async def count_all_users(session: AsyncSession):
+    query = select(UserModel).order_by(UserModel.id)
+    result = await session.scalars(query)
+    return len(list(result))
 
-asyncio.run(main())
+
+async def delete_all_users(session: AsyncSession):
+    stmt = delete(UserModel)
+    await session.execute(stmt)
+    await session.commit()
