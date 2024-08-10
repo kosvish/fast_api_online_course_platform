@@ -7,13 +7,16 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = {extras = ["all"], version = "^0.111.1"}
-sqlalchemy = {extras = ["asynio"], version = "^2.0.31"}
+fastapi = { extras = ["all"], version = "^0.111.1" }
+sqlalchemy = { extras = ["asynio"], version = "^2.0.31" }
 aiosqlite = "^0.20.0"
 alembic = "^1.13.2"
 black = "^24.8.0"
 pytest = "^8.3.2"
+pytest-asyncio = "^0.23.8"
 
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 [build-system]
 requires = ["poetry-core"]
