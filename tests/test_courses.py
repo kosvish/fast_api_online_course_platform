@@ -43,23 +43,6 @@ def users():
     return users_data
 
 
-@pytest.fixture(scope="session", autouse=True)
-async def setup_database():
-    print("Запускаюсь")
-    # создаем тестовое соединение из пула соединений
-    async with async_engine_test.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    async with async_engine_test.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-
-@pytest.fixture(scope="function")
-async def session():
-    async with async_session_test() as s:
-        yield s
-
-
 @pytest.fixture(scope="function")
 async def clear_courses(session):
     await delete_all_courses(session)
@@ -113,5 +96,3 @@ class TestCrudCourse:
         await delete_course_by_id(session, 1)
         len_result = await count_courses(session)
         assert len_result == 0
-
-    # async def test_r

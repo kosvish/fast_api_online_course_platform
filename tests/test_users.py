@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import async_session_test, async_engine_test, async_engine
 from app.db.models import Base, UserModel, CourseModel
-from app.crud.user import (
+from app.crud import (
     create_user,
     read_user_by_id,
     update_user_by_id,
@@ -23,23 +23,6 @@ def users():
         ["Test3", "test3@gmail.com", "123"],
     ]
     return users_data
-
-
-@pytest.fixture(scope="session", autouse=True)
-async def setup_database():
-    print("Запускаюсь")
-    # создаем тестовое соединение из пула соединений
-    async with async_engine_test.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    async with async_engine_test.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-
-@pytest.fixture(scope="function")
-async def session():
-    async with async_session_test() as s:
-        yield s
 
 
 @pytest.fixture(scope="function")
