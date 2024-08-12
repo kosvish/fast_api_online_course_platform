@@ -12,7 +12,7 @@ async def create_user(
     return user
 
 
-async def read_user_by_id(session: AsyncSession, user_id: int) -> UserModel:
+async def select_user_by_id(session: AsyncSession, user_id: int) -> UserModel:
     query = select(UserModel).where(UserModel.id == user_id)
     user = await session.scalar(query)
     return user
@@ -47,3 +47,5 @@ async def delete_all_users(session: AsyncSession):
     stmt = delete(UserModel)
     await session.execute(stmt)
     await session.commit()
+
+
