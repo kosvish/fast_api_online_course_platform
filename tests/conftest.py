@@ -38,19 +38,19 @@ def courses_data():
             "title": "Django",
             "description": "Best Course for Django",
             "code_language": "Python",
-            "user_id": 1,
+            "creator_id": 1,
         },
         {
             "title": "FastAPI",
             "description": "Best Course for FastAPI",
             "code_language": "Python",
-            "user_id": 2,
+            "creator_id": 2,
         },
         {
             "title": "SQLAlchemy",
             "description": "Best Course for SQLAlchemy",
             "code_language": "Python",
-            "user_id": 3,
+            "creator_id": 3,
         },
     ]
     return courses_data
