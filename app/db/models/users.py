@@ -11,9 +11,7 @@ class User(Base):
     username: Mapped[str_200]
     email: Mapped[str_200] = mapped_column(unique=True, nullable=False)
     hash_password: Mapped[str_200] = mapped_column(unique=False, nullable=False)
-    course_details: Mapped[list["CourseUserAssociation"]] = relationship(
-        back_populates="user"
+    enrolled_course: Mapped[list["Course"]] = relationship(
+        back_populates="participants", secondary="course_user_association"
     )
-    courses: Mapped[list["Course"]] = relationship(
-        back_populates="users", secondary="course_user_association"
-    )
+    created_courses: Mapped[list['Course']] = relationship(back_populates='creator')
