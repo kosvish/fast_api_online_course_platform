@@ -21,6 +21,3 @@ class CourseUserAssociation(Base):
     course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     count_participants: Mapped[int] = mapped_column(default=0, server_default="0")
-
-    course: Mapped["Course"] = relationship(back_populates="users_detail")
-    user: Mapped["User"] = relationship(back_populates="course_details")
