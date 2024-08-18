@@ -15,7 +15,6 @@ async def create_user(
 async def select_all_users(session: AsyncSession) -> list[UserModel]:
     query = select(UserModel).order_by(UserModel.id)
     result = await session.scalars(query)
-    await session.commit()
     return list(result)
 
 
