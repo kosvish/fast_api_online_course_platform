@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.models import Courses as CourseModel
+from app.db.models import CourseModel
 from app.api.dependencies import get_async_session, get_course_by_id
 from app.api.schemas import (
     CourseCreate,
