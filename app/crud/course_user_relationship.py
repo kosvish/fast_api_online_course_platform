@@ -49,10 +49,23 @@ async def select_course_with_creator_by_id(
     return course
 
 
-async def add_participants_to_course_by_id(
+async def add_participants_to_course(
     session: AsyncSession, course: CourseModel, *participants: UserModel
 ):
     for user in participants:
         course.participants.append(user)
 
+    await session.commit()
+
+
+async def delete_user_from_participants_in_course(
+    session: AsyncSession, user: UserModel, course_with_participants: CourseModel
+):
+    course_with_participants.participants.remove(user)
+    await session.commit()
+
+
+async def delete_all_association(session: AsyncSession):
+    stmt = delete(CourseUserAssociation)
+    await session.execute(stmt)
     await session.commit()
