@@ -3,7 +3,7 @@ from app.db import session
 from app.db.models import base
 from contextlib import asynccontextmanager
 import uvicorn
-from app.api.routes import course_router
+from app.api.routes import course_router, user_router
 
 
 @asynccontextmanager
@@ -14,7 +14,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(course_router)
+# app.include_router(course_router)
+app.include_router(user_router)
 
 
 if __name__ == "__main__":
