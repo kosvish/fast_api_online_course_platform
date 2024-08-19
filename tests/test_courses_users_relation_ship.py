@@ -15,10 +15,23 @@ from app.crud.course_user_relationship import (
     select_course_with_creator_by_id,
     select_course_with_participants_by_id,
     select_all_courses_with_participants,
-    add_participants_to_course_by_id,
+    add_participants_to_course,
+    delete_user_from_participants_in_course,
+delete_all_association
 )
 from app.crud.user import select_user_by_id, select_all_users
 import pytest
+
+
+@pytest.fixture(scope="module", autouse=True)
+async def setup_database():
+    print("Запускаюсь")
+    # создаем тестовое соединение из пула соединений
+    async with async_engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    async with async_engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture
@@ -31,6 +44,7 @@ async def create_users_courses(session, courses_data, users_data):
     yield
     await delete_all_users(session)
     await delete_all_courses(session)
+    await delete_all_association(session)
 
 
 @pytest.mark.usefixtures("create_users_courses")
@@ -53,6 +67,15 @@ class TestCourseUserRelation:
     async def test_add_participants_to_course_by_id(self, session, users_data):
         course = await select_course_with_participants_by_id(session, 1)
         users = await select_all_users(session)
-        await add_participants_to_course_by_id(session, course, *users)
+        await add_participants_to_course(session, course, *users)
         course = await select_course_with_participants_by_id(session, 1)
         assert len(course.participants) == len(users_data)
+
+    async def test_delete_user_from_participants_in_course(self, session, users_data):
+        course = await select_course_with_participants_by_id(session, 1)
+        user = await select_user_by_id(session, 1)
+        await add_participants_to_course(session, course, user)
+        course = await select_course_with_participants_by_id(session, 1)
+        await delete_user_from_participants_in_course(session, user, course)
+        course = await select_course_with_participants_by_id(session, 1)
+        assert len(course.participants) == 0
