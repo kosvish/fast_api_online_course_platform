@@ -24,4 +24,5 @@ from .course_user_relationship import (
     select_all_courses_with_participants,
     select_course_with_participants_by_id,
     select_course_with_creator_by_id,
+delete_all_association
 )
