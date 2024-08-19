@@ -8,13 +8,25 @@ from app.crud import (
     update_user_by_id,
     delete_user_by_id,
     count_all_users,
-    delete_all_users, select_user_by_id,
+    delete_all_users,
+    select_user_by_id,
 )
 
 import pytest
 
 
 # username: str, email: str, hash_password: str
+
+
+@pytest.fixture(scope="module", autouse=True)
+async def setup_database():
+    print("Запускаюсь")
+    # создаем тестовое соединение из пула соединений
+    async with async_engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    async with async_engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture(scope="function")
