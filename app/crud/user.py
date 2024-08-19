@@ -5,7 +5,7 @@ from app.db.models import UserModel
 
 async def create_user(
     session: AsyncSession, username: str, email: str, hash_password: str
-):
+) -> UserModel:
     user = UserModel(username=username, email=email, hash_password=hash_password)
     session.add(user)
     await session.commit()
