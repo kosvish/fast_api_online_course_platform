@@ -1,5 +1,6 @@
 import pytest
 
+from app.crud import delete_all_users, delete_all_courses
 from app.db import async_engine_test, async_session_test
 from app.db.models import Base
 
@@ -19,6 +20,8 @@ async def setup_database():
 async def session():
     async with async_session_test() as s:
         yield s
+
+
 
 
 @pytest.fixture
