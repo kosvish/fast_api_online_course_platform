@@ -5,7 +5,7 @@ class CourseBase(BaseModel):
     title: str
     description: str | None = None
     code_language: str
-    mentor: str
+    creator_id: int
 
 
 class Course(CourseBase):
@@ -25,5 +25,5 @@ class CourseUpdatePartial(CourseCreate):
     title: str | None = None
     description: str | None = None
     code_language: str | None = None
-    mentor: str | None = None
+    creator_id: int | None = None
 
