@@ -37,18 +37,18 @@ async def setup_courses(session, courses_data):
 @pytest.mark.usefixtures("setup_courses")
 class TestCrudCourse:
     async def test_select_course_by_id(self, session, courses_data):
-        title, description, code_language, user_id = list(courses_data[0].values())
-        fetched_course = await select_course_by_id(session, user_id)
+        title, description, code_language, creator_id = list(courses_data[0].values())
+        fetched_course = await select_course_by_id(session, creator_id)
         assert fetched_course.title == title
         assert fetched_course.description == description
         assert fetched_course.code_language == code_language
-        assert fetched_course.user_id == user_id
+        assert fetched_course.creator_id == creator_id
 
     async def test_update_course_by_id(self, session, courses_data):
-        title, description, code_language, user_id = list(courses_data[0].values())
+        title, description, code_language, creator_id = list(courses_data[0].values())
         updated_course = await update_course_by_id(
             session,
-            user_id,
+            creator_id,
             title="UpdatedTitle",
             description="UpdatedDesc",
             code_language="Java",
@@ -58,7 +58,8 @@ class TestCrudCourse:
         assert updated_course.code_language != code_language
 
     async def test_delete_course_by_id(self, session, courses_data):
-        await delete_course_by_id(session, courses_data[0]["user_id"])
+        await delete_course_by_id(session, courses_data[0]["creator_id"])
+        await delete_course_by_id(session, courses_data[0]["creator_id"])
         len_result = await count_courses(session)
         assert len_result == len(courses_data) - 1
 
