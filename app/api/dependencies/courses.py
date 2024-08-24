@@ -4,12 +4,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db import CourseModel
 from .db import get_async_session
 from fastapi import Depends, HTTPException, status
+from app.crud.course import select_course_by_id
 
 
-async def get_course_by_id(course_id: int, session: AsyncSession = Depends(get_async_session)):
-    query = select(CourseModel).where(CourseModel.id == course_id)
-    course = await session.execute(query)
-    course = course.scalars().one_or_none()
+async def get_course_by_id(
+    course_id: int, session: AsyncSession = Depends(get_async_session)
+):
+
+    course = await select_course_by_id(session, course_id)
+
     if course is None:
-        raise HTTPException(detail="Course not found", status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(
+            detail="Course not found", status_code=status.HTTP_404_NOT_FOUND
+        )
     return course
