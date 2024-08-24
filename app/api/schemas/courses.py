@@ -27,3 +27,5 @@ class CourseUpdatePartial(CourseCreate):
     code_language: str | None = None
     creator_id: int | None = None
 
+
+
