@@ -18,19 +18,16 @@ async def select_all_users(session: AsyncSession) -> list[UserModel]:
     return list(result)
 
 
-async def select_user_by_id(session: AsyncSession, user_id: int) -> UserModel:
+async def select_user_by_id(session: AsyncSession, user_id: int) -> UserModel | None:
     query = select(UserModel).where(UserModel.id == user_id)
     user = await session.scalar(query)
     return user
 
 
 async def update_user_by_id(
-    session: AsyncSession, user_id: int, username: str, email: str, hash_password: str
+    session: AsyncSession, user: UserModel, **kwargs
 ) -> UserModel:
-    query = select(UserModel).where(UserModel.id == user_id)
-    user = await session.scalar(query)
-    attrs = {"username": username, "email": email, "hash_password": hash_password}
-    for attr, value in attrs.items():
+    for attr, value in kwargs.items():
         setattr(user, attr, value)
     await session.commit()
     await session.refresh(user)
