@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 from app.api.routes import course_router, user_router
 from app.api.demo_auth.views import router as demo_auth_router
+from app.api.demo_auth.demo_jwt_auth import router as demo_auth_jwt_router
 
 
 @asynccontextmanager
@@ -18,6 +19,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(course_router)
 app.include_router(user_router)
 app.include_router(demo_auth_router)
+app.include_router(demo_auth_jwt_router)
 
 
 if __name__ == "__main__":
