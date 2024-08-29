@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from .courses import CourseBase
 
 
@@ -28,5 +28,12 @@ class ResponseUser(BaseModel):
     username: str
     email: EmailStr
 
+
+class UserSchema(BaseModel):
+    model_config = ConfigDict(strict=True)
+    username: str
+    password: bytes
+    email: EmailStr | None = None
+    active: bool = True
 
 
