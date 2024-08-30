@@ -1,12 +1,13 @@
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import UserModel
+from app.api.auth import hash_password as hash_password_func
 
 
 async def create_user(
     session: AsyncSession, username: str, email: str, hash_password: str
 ) -> UserModel:
-    user = UserModel(username=username, email=email, hash_password=hash_password)
+    user = UserModel(username=username, email=email, hash_password=hash_password_func(hash_password))
     session.add(user)
     await session.commit()
     return user
