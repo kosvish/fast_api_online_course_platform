@@ -4,14 +4,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db import CourseModel
 from .db import get_async_session
 from fastapi import Depends, HTTPException, status
-from app.crud.course import select_course_by_id
 
 
 async def get_course_by_id(
     course_id: int, session: AsyncSession = Depends(get_async_session)
 ):
-
-    course = await select_course_by_id(session, course_id)
+    query = (
+        select(CourseModel)
+        .where(CourseModel.id == course_id)
+        .order_by(CourseModel.id)
+    )
+    course = await session.scalar(query)
 
     if course is None:
         raise HTTPException(
