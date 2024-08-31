@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, status
 
 async def get_course_by_id(
     course_id: int, session: AsyncSession = Depends(get_async_session)
-):
+) -> CourseModel:
     query = (
         select(CourseModel)
         .where(CourseModel.id == course_id)
