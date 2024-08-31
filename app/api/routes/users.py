@@ -11,12 +11,20 @@ from app.crud.user import (
     delete_user_by_id,
 )
 
-from app.api.schemas import CreateUser, UpdateUser, ResponseUser, UpdateUserPartial
+from app.api.schemas import (
+    CreateUser,
+    UpdateUser,
+    ResponseUser,
+    UpdateUserPartial,
+    UserSchema,
+)
 from app.utils import check_unique_user_email
 from app.db.models import UserModel
 from app.api.dependencies import get_user_by_id as get_user_by_id_dependencies
 from app.crud.user import update_user_by_id as update_user_by_id_func
 from app.crud.course_user_relationship import select_current_user_with_courses_by_id
+from app.api.auth import get_current_token_payload
+from app.api.dependencies import get_current_user_by_token
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -82,3 +90,10 @@ async def get_user_by_id_with_courses_route(
 ):
     user = await select_current_user_with_courses_by_id(user, session)
     return {"user_courses": user.enrolled_course}
+
+
+@router.get("/profile", response_model=ResponseUser)
+async def get_user_profile(
+    current_user: UserModel = Depends(get_current_user_by_token),
+):
+    return ResponseUser(username=current_user.username, email=current_user.email)
