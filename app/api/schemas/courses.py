@@ -21,11 +21,20 @@ class CourseUpdate(CourseCreate):
     pass
 
 
-class CourseUpdatePartial(CourseCreate):
+class CourseUpdatePartial(BaseModel):
     title: str | None = None
     description: str | None = None
     code_language: str | None = None
-    creator_id: int | None = None
+    # creator_id: int | None = None
 
 
+class CourseResponse(BaseModel):
+    title: str
+    description: str | None = None
+    code_language: str
 
+
+class CourseCreateProd(BaseModel):
+    title: str
+    description: str | None = None
+    code_language: str
