@@ -1,7 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
-from .courses import CourseBase
+from .courses import CourseBase, CourseResponse
 
 
 class BaseUser(BaseModel):
@@ -32,8 +32,4 @@ class ResponseUser(BaseModel):
 class UserSchema(BaseModel):
     model_config = ConfigDict(strict=True)
     username: str
-    password: bytes
-    email: EmailStr | None = None
-    active: bool = True
-
-
+    email: EmailStr
