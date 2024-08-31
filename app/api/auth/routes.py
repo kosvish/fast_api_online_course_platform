@@ -2,28 +2,30 @@ from fastapi import APIRouter, Form, HTTPException, status, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .utils import validate_password, encode_jwt_token
+from .utils import validate_password, encode_jwt_token, decode_jwt_token
 from fastapi.security import OAuth2PasswordBearer
 from app.db.models import UserModel
 from ..dependencies import get_async_session
 from .schemas import TokenInfo
+from jwt.exceptions import InvalidTokenError
 
+from ..schemas import UserSchema
 
 router = APIRouter(prefix="/jwt", tags=["AuthJWT"])
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/jwt/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/jwt/login", scheme_name="UserSchema")
 
 
 async def validate_auth_user(
-    email: str = Form(),
+    username: str = Form(),
     password: str = Form(),
     session: AsyncSession = Depends(get_async_session),
 ):
     invalid_data_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password"
     )
-    query = select(UserModel).where(UserModel.email == email)
+    query = select(UserModel).where(UserModel.username == username)
     user = await session.scalar(query)
     if user is None:
         raise invalid_data_exc
@@ -33,8 +35,19 @@ async def validate_auth_user(
     return user
 
 
+async def get_current_token_payload(token: str = Depends(oauth2_scheme)) -> dict:
+    print(token)
+    try:
+        payload = decode_jwt_token(token)
+    except InvalidTokenError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {e}"
+        )
+    return payload
+
+
 @router.post("/login")
 async def login_user(user: UserModel = Depends(validate_auth_user)):
     jwt_payload = {"sub": user.id, "username": user.username, "email": user.email}
     token = encode_jwt_token(jwt_payload)
-    return TokenInfo(token=token, type="Bearer")
+    return TokenInfo(access_token=token, token_type="Bearer")
