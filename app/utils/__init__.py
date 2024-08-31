@@ -1,2 +1,2 @@
-from .checking import check_user_in_course_participants
+from .checking import check_user_in_course_participants, check_is_owner_user_course
 from .users import check_unique_user_email
