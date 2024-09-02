@@ -17,14 +17,18 @@ from app.api.schemas import (
     ResponseUser,
     UpdateUserPartial,
     UserSchema,
+    CourseResponse,
 )
 from app.utils import check_unique_user_email
 from app.db.models import UserModel
 from app.api.dependencies import get_user_by_id as get_user_by_id_dependencies
 from app.crud.user import update_user_by_id as update_user_by_id_func
-from app.crud.course_user_relationship import select_current_user_with_courses_by_id
-from app.api.auth import get_current_token_payload
+from app.crud.course_user_relationship import (
+    select_current_user_with_courses_by_id,
+    select_all_created_course_by_current_user,
+)
 from app.api.dependencies import get_current_user_by_token
+from app.db.models import CourseModel
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -97,3 +101,42 @@ async def get_user_profile(
     current_user: UserModel = Depends(get_current_user_by_token),
 ):
     return ResponseUser(username=current_user.username, email=current_user.email)
+
+
+# users course relationship
+@router.get("/profile/my-enrolled-courses", status_code=status.HTTP_200_OK)
+async def get_user_courses_through_profile(
+    current_user: UserModel = Depends(get_current_user_by_token),
+    session: AsyncSession = Depends(get_async_session),
+):
+    user_with_courses = await select_current_user_with_courses_by_id(
+        current_user, session
+    )
+    user_enrolled_courses: list[CourseModel] = user_with_courses.enrolled_course
+    return [
+        CourseResponse(
+            title=course.title,
+            description=course.description,
+            code_language=course.code_language,
+        )
+        for course in user_enrolled_courses
+    ]
+
+
+@router.get("/profile/my-created-course", status_code=status.HTTP_200_OK)
+async def get_user_courses_through_profile(
+    current_user: UserModel = Depends(get_current_user_by_token),
+    session: AsyncSession = Depends(get_async_session),
+):
+    user_with_created_courses = await select_all_created_course_by_current_user(
+        current_user, session
+    )
+    created_courses: list[CourseModel] = user_with_created_courses.created_courses
+    return [
+        CourseResponse(
+            title=course.title,
+            description=course.description,
+            code_language=course.code_language,
+        )
+        for course in created_courses
+    ]
