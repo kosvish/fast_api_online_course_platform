@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from fastapi import status
 from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload, joinedload
@@ -7,6 +7,7 @@ from app.db.models import UserModel, CourseModel, CourseUserAssociation
 from .course import select_course_by_id
 from .user import select_user_by_id
 from app.utils import check_user_in_course_participants
+from ..api.dependencies import get_current_user_by_token, get_course_by_id
 
 
 async def select_all_courses_with_participants(
@@ -81,4 +82,32 @@ async def select_current_user_with_courses_by_id(
     # )
     # user_with_course = await session.scalar(query)
     await session.refresh(user, ["enrolled_course"])
+    return user
+
+
+async def select_course_participants_by_course_id(
+    course_id: int,
+    session: AsyncSession,
+    current_user: UserModel = Depends(get_current_user_by_token),
+    current_course: CourseModel = Depends(get_course_by_id),
+) -> list[UserModel]:
+    query = (
+        select(CourseModel)
+        .where(CourseModel.id == course_id)
+        .options(selectinload(CourseModel.participants))
+    )
+    course = await session.scalar(query)
+    if course.creator_id == current_user.id:
+        return course.participants
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You have not enough permissions to view this page",
+        )
+
+
+async def select_all_created_course_by_current_user(
+    user: UserModel, session: AsyncSession
+):
+    await session.refresh(user, ["created_courses"])
     return user
