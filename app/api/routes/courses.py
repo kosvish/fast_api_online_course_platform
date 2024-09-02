@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api import CourseUpdatePartial
 from app.api.dependencies import get_async_session
-from app.api.schemas import Course, CourseResponse, CourseCreateProd
+from app.api.schemas import Course, CourseResponse, CourseCreateProd, ResponseUser
 from fastapi import status
 from app.crud.course import (
     select_all_courses,
@@ -14,7 +14,11 @@ from app.crud.course import (
 )
 from app.db.models import UserModel
 from app.api.dependencies import get_current_user_by_token, get_course_by_id
-from app.crud.course_user_relationship import select_course_with_participants_by_id
+from app.crud.course_user_relationship import (
+    select_course_with_participants_by_id,
+    select_course_with_creator_by_id,
+    select_course_participants_by_course_id,
+)
 from app.db.models import CourseModel
 from app.utils import check_is_owner_user_course, check_user_in_course_participants
 
@@ -57,6 +61,7 @@ async def enroll_course(
     course_id: int,
     session: AsyncSession = Depends(get_async_session),
     current_user: UserModel = Depends(get_current_user_by_token),
+    current_course: CourseModel = Depends(get_course_by_id)
 ) -> dict:
 
     course = await select_course_with_participants_by_id(session, course_id)
@@ -123,3 +128,38 @@ async def delete_course_by_id_route(
         "status": status.HTTP_200_OK,
         "message": f"Course {course.title} was successfully deleted!",
     }
+
+
+# create routes relation between course - user
+
+
+@router.get(
+    "/{course_id}/creator", response_model=ResponseUser, status_code=status.HTTP_200_OK
+)
+async def get_course_creator_route(
+    course_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    course: CourseModel = Depends(get_course_by_id),
+):
+    course = await select_course_with_creator_by_id(session, course_id)
+    creator: UserModel = course.creator
+    return ResponseUser(username=creator.username, email=creator.email)
+
+
+@router.get("/{course_id}/participants", status_code=status.HTTP_200_OK)
+async def get_course_participants_route(
+    course_id: int,
+    current_user: UserModel = Depends(get_current_user_by_token),
+    session: AsyncSession = Depends(get_async_session),
+    course: CourseModel = Depends(get_course_by_id),
+):
+    if course.creator_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You have not enough permissions to view this page",
+        )
+    course_participants = await select_course_participants_by_course_id(course_id, session)
+    return [
+        ResponseUser(username=participant.username, email=participant.email)
+        for participant in course_participants
+    ]
