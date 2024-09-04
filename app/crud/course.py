@@ -34,7 +34,12 @@ async def count_courses(session: AsyncSession) -> int:
 
 
 async def select_all_courses(session: AsyncSession) -> list[CourseModel]:
-    query = select(CourseModel).order_by(CourseModel.id)
+    query = (
+        select(CourseModel).order_by(CourseModel.id)
+        .options(
+            selectinload(CourseModel.creator)
+        )
+    )
     result = await session.scalars(query)
     return list(result)
 
