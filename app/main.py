@@ -8,6 +8,9 @@ from app.api.demo_auth.views import router as demo_auth_router
 
 # from app.api.demo_auth.demo_jwt_auth import router as demo_auth_jwt_router
 from app.api.auth import auth_router
+from fastapi.staticfiles import StaticFiles
+from app.pages_routes import router as pages_router
+import os
 
 
 @asynccontextmanager
@@ -23,6 +26,12 @@ app.include_router(user_router)
 # app.include_router(demo_auth_router)
 # app.include_router(demo_auth_jwt_router)
 app.include_router(auth_router)
+app.include_router(pages_router)
+
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+static_dir = os.path.join(base_dir, "static")
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 if __name__ == "__main__":
