@@ -7,7 +7,7 @@ from app.db.models import UserModel, CourseModel, CourseUserAssociation
 from .course import select_course_by_id
 from .user import select_user_by_id
 from app.utils import check_user_in_course_participants
-from ..api.dependencies import get_current_user_by_token, get_course_by_id
+#from ..api.dependencies import get_current_user_by_token, get_course_by_id
 
 
 async def select_all_courses_with_participants(
@@ -88,8 +88,8 @@ async def select_current_user_with_courses_by_id(
 async def select_course_participants_by_course_id(
     course_id: int,
     session: AsyncSession,
-    current_user: UserModel = Depends(get_current_user_by_token),
-    current_course: CourseModel = Depends(get_course_by_id),
+    current_user: UserModel,
+    current_course: CourseModel,
 ) -> list[UserModel]:
     query = (
         select(CourseModel)
