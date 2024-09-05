@@ -14,9 +14,6 @@ from ..schemas import UserSchema
 router = APIRouter(prefix="/jwt", tags=["AuthJWT"])
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/jwt/login", scheme_name="UserSchema")
-
-
 async def validate_auth_user(
     username: str = Form(),
     password: str = Form(),
@@ -33,17 +30,6 @@ async def validate_auth_user(
     if not validate_password(password, user.hash_password):
         raise invalid_data_exc
     return user
-
-
-async def get_current_token_payload(token: str = Depends(oauth2_scheme)) -> dict:
-    print(token)
-    try:
-        payload = decode_jwt_token(token)
-    except InvalidTokenError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {e}"
-        )
-    return payload
 
 
 @router.post("/login")
