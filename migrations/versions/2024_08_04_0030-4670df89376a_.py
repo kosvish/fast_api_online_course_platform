@@ -36,13 +36,10 @@ def upgrade() -> None:
         sa.Column("description", sa.String(), nullable=True),
         sa.Column("code_language", sa.String(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("user_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["user_id"],
-            ["users.id"],
-        ),
+        sa.Column("creator_id", sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(["creator_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("user_id"),
+        sa.UniqueConstraint("creator_id"),
     )
     # ### end Alembic commands ###
 
