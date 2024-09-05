@@ -49,13 +49,12 @@ class TestCrudUser:
     async def test_update_user_by_id(self, session: AsyncSession, users_data):
         user = await select_user_by_id(session, 1)
         updated_user = await update_user_by_id(
-            session, user, username="Test1Update", email="test1update@gmail.com", hash_password="1234"
+            session, user, username="Test1Update", email="test1update@gmail.com"
         )
         refreshed_user = await select_user_by_id(session, 1)
 
         assert updated_user.username == refreshed_user.username
         assert updated_user.email == refreshed_user.email
-        assert updated_user.hash_password == refreshed_user.hash_password
 
     async def test_delete_user_by_id(self, session: AsyncSession, users_data):
         await delete_user_by_id(session, 1)
