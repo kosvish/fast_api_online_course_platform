@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from app.core import settings
 
-async_engine = create_async_engine(settings.db.url, echo=False)
+async_engine = create_async_engine(settings.db.url, echo=settings.db.echo)
 async_engine_test = create_async_engine(settings.db.test_url, echo=True)
 
 # создание асинхронной фабрики сессий:
