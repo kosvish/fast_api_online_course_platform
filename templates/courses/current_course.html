@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<title>Детали курса по программированию</title>
+<style>
+    body {
+           font-family: Arial, sans-serif;
+       }
+       .course-details {
+           width: 80%;
+           margin: auto;
+           padding: 20px;
+           border: 1px solid #ccc;
+           border-radius: 5px;
+       }
+       .course-details h1 {
+           font-size: 24px;
+           margin-bottom: 10px;
+       }
+       .course-details p {
+           font-size: 16px;
+           line-height: 1.5;
+           margin-bottom: 10px;
+       }
+</style>
+<div class="course-details">
+    <h1>{{ course.title }}</h1>
+    <p><strong>Описание:</strong> {{ course.description }}</p>
+    <p><strong>Преподаватель:</strong> {{ course.creator.username }}</p>
+<!--    <p><strong>Длительность:</strong> Продолжительность курса</p>-->
+    <p><strong>Цена:</strong> {{ course.price }}</p>
+    <p><strong>Дата начала:</strong> Дата начала курса</p>
+    <p><strong>Язык программирования:</strong>{{ course.code_language }}</p>
+<!--    <p><strong>Уровень:</strong> Уровень курса (например, начальный, средний, продвинутый)</p>-->
+<!--    <p><strong>Требования:</strong> Требования к участникам курса</p>-->
+<!--    <p><strong>Программа курса:</strong> Краткое описание программы курса</p>-->
+</div>
+
+
+{% endblock %}
