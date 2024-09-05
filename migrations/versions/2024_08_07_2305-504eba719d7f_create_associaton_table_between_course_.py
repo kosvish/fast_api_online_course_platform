@@ -1,4 +1,4 @@
-"""create associaton table between course and user
+"""create associaton table between course and users
 
 Revision ID: 504eba719d7f
 Revises: a217e75c883f
@@ -35,10 +35,13 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["course_id"],
             ["courses.id"],
+            ondelete='CASCADE'
+
         ),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
+            ondelete='CASCADE'
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint(
