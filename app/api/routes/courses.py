@@ -108,10 +108,13 @@ async def update_course_route(
 async def get_course_by_id_route(
     course: CourseModel = Depends(get_course_by_id),
 ):
+    user = ResponseUser(username=course.creator.username, email=course.creator.email)
     return CourseResponse(
         title=course.title,
         description=course.description,
         code_language=course.code_language,
+        creator=user,
+        price=course.price
     )
 
 
