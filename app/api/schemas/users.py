@@ -1,7 +1,6 @@
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
-from .courses import CourseBase, CourseResponse
 
 
 class BaseUser(BaseModel):
