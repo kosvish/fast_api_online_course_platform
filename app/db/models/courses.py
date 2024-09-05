@@ -14,6 +14,7 @@ class Course(Base):
     title: Mapped[str_200]
     description: Mapped[str_200 | None] = None
     code_language: Mapped[str_200]
+    price: Mapped[int] = mapped_column(default=500, server_default="500")
     creator_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
     participants: Mapped[list["User"]] = relationship(
         back_populates="enrolled_course", secondary="course_user_association"
