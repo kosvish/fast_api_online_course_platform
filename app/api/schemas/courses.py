@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict
+from .users import ResponseUser
 
 
 class CourseBase(BaseModel):
@@ -32,6 +33,8 @@ class CourseResponse(BaseModel):
     title: str
     description: str | None = None
     code_language: str
+    creator: ResponseUser
+    price: int
 
 
 class CourseCreateProd(BaseModel):
