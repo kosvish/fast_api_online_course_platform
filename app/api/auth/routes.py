@@ -20,7 +20,7 @@ async def validate_auth_user(
     session: AsyncSession = Depends(get_async_session),
 ):
     invalid_data_exc = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password"
+        status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password"
     )
     query = select(UserModel).where(UserModel.username == username)
     user = await session.scalar(query)
