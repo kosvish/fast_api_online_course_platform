@@ -1,15 +1,11 @@
 from fastapi import APIRouter, Form, HTTPException, status, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from .utils import validate_password, encode_jwt_token, decode_jwt_token
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.responses import JSONResponse
+from .utils import validate_password, encode_jwt_token
 from app.db.models import UserModel
 from ..dependencies import get_async_session
 from .schemas import TokenInfo
-from jwt.exceptions import InvalidTokenError
-
-from ..schemas import UserSchema
 
 router = APIRouter(prefix="/jwt", tags=["AuthJWT"])
 
@@ -36,4 +32,7 @@ async def validate_auth_user(
 async def login_user(user: UserModel = Depends(validate_auth_user)):
     jwt_payload = {"sub": user.id, "username": user.username, "email": user.email}
     token = encode_jwt_token(jwt_payload)
-    return TokenInfo(access_token=token, token_type="Bearer")
+    response = JSONResponse(content={"access_token": token, "token_type": "Bearer"})
+    response.set_cookie(key="access_token", value=token)
+    return response
+    # return TokenInfo(access_token=token, token_type="Bearer")
