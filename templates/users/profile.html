@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<style>
+    /* Стили для контейнера профиля */
+    .profile-container {
+        width: 400px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 20px auto;
+        box-sizing: border-box;
+    }
+
+    /* Стили для заголовка профиля */
+    .profile-container h1 {
+        font-size: 24px;
+        margin-top: 0;
+    }
+
+    /* Стили для деталей профиля */
+    .profile-container p {
+        font-size: 16px;
+        margin: 10px 0;
+    }
+
+    /* Стили для списка курсов */
+    .profile-container ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .profile-container li {
+        margin: 5px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Шаблон для профиля пользователя -->
+<div class="profile-container">
+    <h1>{{user.username}}</h1>
+    <p>Email: {{user.email }}</p>
+    <h2>Enrolled Courses:</h2>
+    <ul>
+        {% for course in user.enrolled_course %}
+        <li>{{course.title}}</li>
+        {% endfor %}
+    </ul>
+    <h2>Created Courses:</h2>
+    <ul>
+        {% for course in user.created_courses %}
+        <!-- Добавьте сюда элементы списка для каждого курса, созданного пользователем -->
+        <li> {{course.title}} </li>
+        {% endfor %}
+        <!-- Добавьте сколько угодно элементов списка -->
+    </ul>
+</div>
+{% endblock %}
