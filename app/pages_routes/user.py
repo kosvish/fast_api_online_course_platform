@@ -1,14 +1,16 @@
 from fastapi import APIRouter, Form
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from .main import templates
 from fastapi import Request, Depends, status
 from typing import Annotated
 
 from ..api.auth.routes import validate_auth_user
-from ..api.dependencies import get_async_session
+from ..api.dependencies import get_async_session, get_current_user_by_token
 from ..api.routes.users import create_user_route
 from ..api.schemas import CreateUser
+from app.db.models import UserModel
 
 router = APIRouter()
 
@@ -47,3 +49,16 @@ async def user_login_post(
 @router.get("/login")
 async def user_login_get(request: Request):
     return templates.TemplateResponse("/users/login.html", {"request": request})
+
+
+@router.get("/profile")
+async def user_profile_get(
+    request: Request,
+    user: UserModel = Depends(get_current_user_by_token),
+    session: AsyncSession = Depends(get_async_session),
+):
+    await session.refresh(user, ["enrolled_course", "created_courses"])
+
+    return templates.TemplateResponse(
+        "/users/profile.html", {"request": request, "user": user}
+    )
