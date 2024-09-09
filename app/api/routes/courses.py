@@ -161,7 +161,7 @@ async def get_course_participants_route(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You have not enough permissions to view this page",
         )
-    course_participants = await select_course_participants_by_course_id(course_id, session)
+    course_participants = await select_course_participants_by_course_id(course_id, session, current_user, course)
     return [
         ResponseUser(username=participant.username, email=participant.email)
         for participant in course_participants
