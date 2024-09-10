@@ -7,6 +7,7 @@ class CourseBase(BaseModel):
     description: str | None = None
     code_language: str
     creator_id: int
+    price: int
 
 
 class Course(CourseBase):
@@ -15,7 +16,10 @@ class Course(CourseBase):
 
 
 class CourseCreate(CourseBase):
-    pass
+    title: str
+    description: str | None = None
+    code_language: str
+    price: int
 
 
 class CourseUpdate(CourseCreate):
@@ -27,6 +31,7 @@ class CourseUpdatePartial(BaseModel):
     description: str | None = None
     code_language: str | None = None
     # creator_id: int | None = None
+    price: int | None = None
 
 
 class CourseResponse(BaseModel):
@@ -41,3 +46,4 @@ class CourseCreateProd(BaseModel):
     title: str
     description: str | None = None
     code_language: str
+    price: int
