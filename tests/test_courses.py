@@ -37,7 +37,7 @@ async def setup_courses(session, courses_data):
 @pytest.mark.usefixtures("setup_courses")
 class TestCrudCourse:
     async def test_select_course_by_id(self, session, courses_data):
-        title, description, code_language, creator_id = list(courses_data[0].values())
+        title, description, code_language, creator_id, price = list(courses_data[0].values())
         fetched_course = await select_course_by_id(session, creator_id)
         assert fetched_course.title == title
         assert fetched_course.description == description
@@ -45,17 +45,19 @@ class TestCrudCourse:
         assert fetched_course.creator_id == creator_id
 
     async def test_update_course_by_id(self, session, courses_data):
-        title, description, code_language, creator_id = list(courses_data[0].values())
+        title, description, code_language, creator_id, price = list(courses_data[0].values())
         updated_course = await update_course_by_id(
             session,
             creator_id,
             title="UpdatedTitle",
             description="UpdatedDesc",
             code_language="Java",
+            price=200
         )
         assert updated_course.title != title
         assert updated_course.description != description
         assert updated_course.code_language != code_language
+        assert updated_course.price != price
 
     async def test_delete_course_by_id(self, session, courses_data):
         await delete_course_by_id(session, courses_data[0]["creator_id"])
