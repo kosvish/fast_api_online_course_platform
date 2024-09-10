@@ -13,6 +13,7 @@ async def create_course(
     title: str,
     description: str,
     code_language: str,
+    price: int,
     creator_id: int = 1,
 ) -> CourseModel:
     course = CourseModel(
@@ -20,6 +21,7 @@ async def create_course(
         description=description,
         code_language=code_language,
         creator_id=creator_id,
+        price=price
     )
 
     session.add(course)
