@@ -47,12 +47,16 @@ async def create_courses(
         description=course_create.description,
         code_language=course_create.code_language,
         creator_id=current_user.id,
+        price=course_create.price,
     )
     await session.refresh(course)
+    await session.refresh(current_user)
     return CourseResponse(
         title=course.title,
         description=course.description,
         code_language=course.code_language,
+        price=course.price,
+        creator=ResponseUser(username=current_user.username, email=current_user.email),
     )
 
 
@@ -61,7 +65,7 @@ async def enroll_course(
     course_id: int,
     session: AsyncSession = Depends(get_async_session),
     current_user: UserModel = Depends(get_current_user_by_token),
-    current_course: CourseModel = Depends(get_course_by_id)
+    current_course: CourseModel = Depends(get_course_by_id),
 ) -> dict:
 
     course = await select_course_with_participants_by_id(session, course_id)
@@ -94,6 +98,7 @@ async def update_course_route(
                 title=course.title,
                 description=course.description,
                 code_language=course.code_language,
+                creator=ResponseUser(username=current_user.username, email=current_user.email)
             )
     except Exception as e:
         return HTTPException(
@@ -114,7 +119,7 @@ async def get_course_by_id_route(
         description=course.description,
         code_language=course.code_language,
         creator=user,
-        price=course.price
+        price=course.price,
     )
 
 
@@ -161,7 +166,9 @@ async def get_course_participants_route(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You have not enough permissions to view this page",
         )
-    course_participants = await select_course_participants_by_course_id(course_id, session, current_user, course)
+    course_participants = await select_course_participants_by_course_id(
+        course_id, session, current_user, course
+    )
     return [
         ResponseUser(username=participant.username, email=participant.email)
         for participant in course_participants
