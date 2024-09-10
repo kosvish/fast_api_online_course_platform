@@ -118,6 +118,8 @@ async def get_user_courses_through_profile(
             title=course.title,
             description=course.description,
             code_language=course.code_language,
+            creator=ResponseUser(username=current_user.username, email=current_user.email),
+            price=course.price
         )
         for course in user_enrolled_courses
     ]
@@ -137,6 +139,8 @@ async def get_user_courses_through_profile(
             title=course.title,
             description=course.description,
             code_language=course.code_language,
+            creator=ResponseUser(username=current_user.username, email=current_user.email),
+            price=course.price
         )
         for course in created_courses
     ]
