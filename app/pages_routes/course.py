@@ -1,8 +1,12 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from .main import templates
 from fastapi import Request, Depends, status
 from app.db.models import CourseModel
-from ..api.routes.courses import get_all_courses, get_course_by_id_route
+from ..api.dependencies import get_current_user_by_token, get_async_session
+from ..api.routes.courses import get_all_courses, get_course_by_id_route, enroll_course
 from fastapi import APIRouter
+from app.db.models import UserModel, CourseModel
 
 
 router = APIRouter()
