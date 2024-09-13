@@ -14,7 +14,7 @@ async def validate_auth_user(
     username: str = Form(),
     password: str = Form(),
     session: AsyncSession = Depends(get_async_session),
-):
+) -> UserModel:
     invalid_data_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password"
     )
