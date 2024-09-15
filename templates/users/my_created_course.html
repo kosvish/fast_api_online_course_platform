@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+<style>
+    .course-card {
+        margin-bottom: 20px;
+    }
+    .course-card .card-header {
+        background-color: #007bff;
+        color: white;
+    }
+    .course-card .card-body {
+        padding: 15px;
+    }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <h1 class="my-4">Courses I'm Created</h1>
+
+    {% if courses %}
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-4">
+            <div class="card course-card">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ course.title }}</h5>
+                </div>
+                <div class="card-body">
+                    {% if course.description %}
+                    <p class="card-text">{{ course.description }}</p>
+                    {% else %}
+                    <p class="card-text">No description available.</p>
+                    {% endif %}
+                    <p class="card-text"><strong>Language:</strong> {{ course.code_language }}</p>
+                    <p class="card-text"><strong>Price:</strong> ${{ course.price }}</p>
+                    <p class="card-text"><strong>Creator:</strong> {{ course.creator.username }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No courses enrolled yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

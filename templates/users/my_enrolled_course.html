@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<style>
+        .course-card {
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .course-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .course-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .course-price {
+            color: #28a745;
+            font-size: 1.2rem;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container mt-5">
+        <h1 class="text-center mb-4">Курсы, на которые вы записаны</h1>
+        <div class="row">
+            {% for course in courses %}
+            <div class="col-md-6">
+                <div class="card course-card">
+                    <div class="card-body">
+                        <h5 class="course-title">{{ course.title }}</h5>
+                        <p class="card-text">{{ course.description or 'Описание отсутствует' }}</p>
+                        <p class="card-text"><strong>Язык программирования:</strong> {{ course.code_language }}</p>
+                        <p class="course-price"><strong>Цена:</strong> {{ course.price }} руб.</p>
+                        <p class="card-text"><strong>Создатель:</strong> {{ course.creator.username }}</p>
+                        <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <p class="text-center">Вы пока не записаны ни на один курс.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
