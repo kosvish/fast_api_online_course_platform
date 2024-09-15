@@ -89,7 +89,22 @@
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
             </div>
-            <a href="" class="btn btn-primary py-2 px-4 d-none d-lg-block">Join Us</a>
+            {% if request.state.authorization_header %}
+            <div class="dropdown">
+                <a href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">
+                    <i class="fa fa-user"></i> <!-- Иконка пользователя -->
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/pages/users/profile">Профиль</a>
+                    <a class="dropdown-item" href="/pages/users/profile/my-created-course">Мои курсы</a>
+                    <a class="dropdown-item" href="/pages/users/profile/my-enrolled-course">Курсы на которые я
+                        записан</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/pages/users/login" class="btn btn-primary py-2 px-4 d-none d-lg-block">Join Us</a>
+            {% endif %}
         </div>
     </nav>
 </div>
