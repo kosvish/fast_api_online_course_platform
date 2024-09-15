@@ -14,7 +14,8 @@ router = APIRouter()
 
 @router.get("/all-courses")
 async def get_all_courses_route_page(
-    request: Request, courses: list[CourseModel] = Depends(get_all_courses)
+    request: Request,
+    courses: list[CourseModel] = Depends(get_all_courses),
 ):
     return templates.TemplateResponse(
         "courses/main.html", context={"request": request, "courses": courses}

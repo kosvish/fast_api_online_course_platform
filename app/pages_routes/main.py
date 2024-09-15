@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 import os
@@ -12,4 +12,7 @@ templates = Jinja2Templates(directory=templates_dir)
 
 @router.get("/main", status_code=status.HTTP_200_OK)
 async def get_main_page(request: Request):
-    return templates.TemplateResponse("/main/main.html", {"request": request})
+    return templates.TemplateResponse(
+        "/main/main.html",
+        {"request": request},
+    )

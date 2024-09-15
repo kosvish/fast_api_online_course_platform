@@ -47,3 +47,5 @@ class CourseCreateProd(BaseModel):
     description: str | None = None
     code_language: str
     price: int
+
+

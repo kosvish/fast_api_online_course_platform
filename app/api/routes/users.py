@@ -105,7 +105,7 @@ async def get_user_profile(
 
 # users course relationship
 @router.get("/profile/my-enrolled-courses", status_code=status.HTTP_200_OK)
-async def get_user_courses_through_profile(
+async def get_user_enrolled_courses_through_profile(
     current_user: UserModel = Depends(get_current_user_by_token),
     session: AsyncSession = Depends(get_async_session),
 ):
@@ -118,15 +118,17 @@ async def get_user_courses_through_profile(
             title=course.title,
             description=course.description,
             code_language=course.code_language,
-            creator=ResponseUser(username=current_user.username, email=current_user.email),
-            price=course.price
+            creator=ResponseUser(
+                username=course.creator.username, email=course.creator.email
+            ),
+            price=course.price,
         )
         for course in user_enrolled_courses
     ]
 
 
 @router.get("/profile/my-created-course", status_code=status.HTTP_200_OK)
-async def get_user_courses_through_profile(
+async def get_user_created_courses_through_profile(
     current_user: UserModel = Depends(get_current_user_by_token),
     session: AsyncSession = Depends(get_async_session),
 ):
@@ -139,8 +141,10 @@ async def get_user_courses_through_profile(
             title=course.title,
             description=course.description,
             code_language=course.code_language,
-            creator=ResponseUser(username=current_user.username, email=current_user.email),
-            price=course.price
+            creator=ResponseUser(
+                username=current_user.username, email=current_user.email
+            ),
+            price=course.price,
         )
         for course in created_courses
     ]
