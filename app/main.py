@@ -25,6 +25,9 @@ class AddAuthHeaderMiddleware(BaseHTTPMiddleware):
             request.headers.__dict__["_list"].append(
                 (b"authorization", f"Bearer {token}".encode())
             )
+            request.state.authorization_header = f"Bearer {token}"
+        else:
+            request.state.authorization_header = None
         response = await call_next(request)
         return response
 
