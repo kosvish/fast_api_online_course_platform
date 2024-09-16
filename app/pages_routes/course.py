@@ -31,3 +31,20 @@ async def get_courses_by_id(
     return templates.TemplateResponse(
         "courses/current_course.html", context={"request": request, "course": course}
     )
+
+
+@router.get("/{course_id}/enroll", status_code=status.HTTP_200_OK)
+async def get_enroll_course_route(
+    request: Request,
+    course_id: int,
+    user: UserModel = Depends(get_current_user_by_token),
+    session: AsyncSession = Depends(get_async_session),
+    current_course: CourseModel = Depends(get_course_by_id_route),
+):
+
+    response = await enroll_course(course_id, session, user, current_course)
+    await session.refresh(user, ["enrolled_course", "created_courses"])
+    if response:
+        return templates.TemplateResponse(
+            "users/profile.html", context={"request": request, "user": user}
+        )
