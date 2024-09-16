@@ -61,6 +61,15 @@ async def user_login_get(request: Request):
     return templates.TemplateResponse("/users/login.html", {"request": request})
 
 
+@router.get("/logout")
+async def get_logout(
+    request: Request, current_user: UserModel = Depends(get_current_user_by_token)
+):
+    response = RedirectResponse(url=request.url_for("get_main_page"))
+    response.delete_cookie(key="access_token")
+    return response
+
+
 @router.get("/profile")
 async def user_profile_get(
     request: Request,
