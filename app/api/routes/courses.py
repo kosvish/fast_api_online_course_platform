@@ -52,6 +52,7 @@ async def create_courses(
     await session.refresh(course)
     await session.refresh(current_user)
     return CourseResponse(
+        id=course.id,
         title=course.title,
         description=course.description,
         code_language=course.code_language,
@@ -95,6 +96,7 @@ async def update_course_route(
                 session, course_id, **update_course.model_dump(exclude_none=True)
             )
             return CourseResponse(
+                id=course.id,
                 title=course.title,
                 description=course.description,
                 code_language=course.code_language,
@@ -115,6 +117,7 @@ async def get_course_by_id_route(
 ):
     user = ResponseUser(username=course.creator.username, email=course.creator.email)
     return CourseResponse(
+        id=course.id,
         title=course.title,
         description=course.description,
         code_language=course.code_language,

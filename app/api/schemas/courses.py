@@ -35,6 +35,7 @@ class CourseUpdatePartial(BaseModel):
 
 
 class CourseResponse(BaseModel):
+    id: int
     title: str
     description: str | None = None
     code_language: str
