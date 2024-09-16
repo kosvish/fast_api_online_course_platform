@@ -39,6 +39,9 @@
     <!--    <p><strong>Уровень:</strong> Уровень курса (например, начальный, средний, продвинутый)</p>-->
     <!--    <p><strong>Требования:</strong> Требования к участникам курса</p>-->
     <!--    <p><strong>Программа курса:</strong> Краткое описание программы курса</p>-->
+    <form method="get" action="{{ url_for('get_enroll_course_route', course_id=course.id) }}">
+        <button type="submit" class="btn btn-primary">Поступить на курс</button>
+    </form>
 </div>
 
 
