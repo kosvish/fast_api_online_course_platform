@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.db import session
@@ -6,15 +6,20 @@ from app.db.models import base
 from contextlib import asynccontextmanager
 import uvicorn
 from app.api.routes import course_router, user_router
-from app.api.demo_auth.views import router as demo_auth_router
-from fastapi import Request
 
+# from app.api.demo_auth.views import router as demo_auth_router
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
 
 # from app.api.demo_auth.demo_jwt_auth import router as demo_auth_jwt_router
 from app.api.auth import auth_router
 from fastapi.staticfiles import StaticFiles
 from app.pages_routes import router as pages_router
 import os
+
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+templates_dir = os.path.join(base_dir, "templates")
+templates = Jinja2Templates(directory=templates_dir)
 
 
 class AddAuthHeaderMiddleware(BaseHTTPMiddleware):
@@ -47,6 +52,15 @@ app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(pages_router)
 app.add_middleware(AddAuthHeaderMiddleware)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    if exc.status_code == status.HTTP_401_UNAUTHORIZED:
+        return templates.TemplateResponse(
+            "/errors/401.html", {"request": request}, status_code=exc.status_code
+        )
+
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 static_dir = os.path.join(base_dir, "static")
