@@ -10,6 +10,9 @@ router = APIRouter()
 templates = Jinja2Templates(directory=templates_dir)
 
 
+
+
+
 @router.get("/main", status_code=status.HTTP_200_OK)
 async def get_main_page(request: Request):
     return templates.TemplateResponse(

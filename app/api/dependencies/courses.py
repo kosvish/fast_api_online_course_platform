@@ -14,9 +14,7 @@ async def get_course_by_id(
         select(CourseModel)
         .where(CourseModel.id == course_id)
         .order_by(CourseModel.id)
-        .options(
-            joinedload(CourseModel.creator)
-        )
+        .options(joinedload(CourseModel.creator))
     )
     course = await session.scalar(query)
 
