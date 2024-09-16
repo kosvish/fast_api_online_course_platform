@@ -1,6 +1,6 @@
 from typing import Any
 
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_async_session
@@ -115,6 +115,7 @@ async def get_user_enrolled_courses_through_profile(
     user_enrolled_courses: list[CourseModel] = user_with_courses.enrolled_course
     return [
         CourseResponse(
+            id=course.id,
             title=course.title,
             description=course.description,
             code_language=course.code_language,
@@ -138,6 +139,7 @@ async def get_user_created_courses_through_profile(
     created_courses: list[CourseModel] = user_with_created_courses.created_courses
     return [
         CourseResponse(
+            id=course.id,
             title=course.title,
             description=course.description,
             code_language=course.code_language,
