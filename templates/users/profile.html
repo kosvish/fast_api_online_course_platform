@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
 
-
 {% block head %}
 <style>
     /* Стили для контейнера профиля */
     .profile-container {
-        width: 400px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 20px;
+        max-width: 600px;
         margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         box-sizing: border-box;
     }
 
     /* Стили для заголовка профиля */
     .profile-container h1 {
-        font-size: 24px;
+        font-size: 2rem;
         margin-top: 0;
+        color: #333;
     }
 
     /* Стили для деталей профиля */
     .profile-container p {
-        font-size: 16px;
+        font-size: 1rem;
         margin: 10px 0;
+        color: #666;
     }
 
     /* Стили для списка курсов */
@@ -32,29 +34,70 @@
     }
 
     .profile-container li {
-        margin: 5px 0;
+        margin: 10px 0;
+    }
+
+    .profile-container a {
+        display: block;
+        padding: 10px;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .profile-container a:hover {
+        background-color: #e63946;
+        color: white;
+    }
+
+    @media (max-width: 600px) {
+        .profile-container {
+            padding: 15px;
+        }
+
+        .profile-container h1 {
+            font-size: 1.5rem;
+        }
+
+        .profile-container p {
+            font-size: 0.9rem;
+        }
+
+        .profile-container a {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Шаблон для профиля пользователя -->
 <div class="profile-container">
-    <h1>{{user.username}}</h1>
-    <p>Email: {{user.email }}</p>
+    <h1>{{ user.username }}</h1>
+    <p>Email: {{ user.email }}</p>
+
     <h2>Enrolled Courses:</h2>
     <ul>
-        {% for course in user.enrolled_course %}
-        <li>{{course.title}}</li>
+        {% for course in user.enrolled_courses %}
+        <li>
+            <a href="{{ url_for('get_courses_by_id', course_id=course.id) }}">{{ course.title }}</a>
+        </li>
+        {% else %}
+        <li>No enrolled courses.</li>
         {% endfor %}
     </ul>
+
     <h2>Created Courses:</h2>
     <ul>
         {% for course in user.created_courses %}
-        <!-- Добавьте сюда элементы списка для каждого курса, созданного пользователем -->
-        <li> {{course.title}} </li>
+        <li>
+            <a href="{{ url_for('get_courses_by_id', course_id=course.id) }}">{{ course.title }}</a>
+        </li>
+        {% else %}
+        <li>No created courses.</li>
         {% endfor %}
-        <!-- Добавьте сколько угодно элементов списка -->
     </ul>
 </div>
 {% endblock %}
