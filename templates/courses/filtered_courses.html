@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <h1>Filtered Courses</h1>
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <img class="card-img-top" src="{{ url_for('static', path='img/courses-1.jpg') }}"
+                     alt="{{ course.title }}">
+                <div class="card-body">
+                    <h4 class="card-title">{{ course.title }}</h4>
+                    <p class="card-text">Instructor: {{ course.creator.username }}</p>
+                    <p class="card-text"><i class="fa fa-star mr-2"></i>4.5 <small>(250)</small></p>
+                    <a class="btn btn-primary" href="{{ url_for('get_courses_by_id', course_id=course.id) }}">Course
+                        Detail</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>No courses found based on the selected filters.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
