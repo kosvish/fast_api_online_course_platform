@@ -78,6 +78,8 @@ async def enroll_course(
             "status": status.HTTP_200_OK,
             "message": f"You successfully joined at course {course.title}!",
         }
+    else:
+        raise HTTPException(detail="You're already joined at this course", status_code=status.HTTP_400_BAD_REQUEST)
 
 
 @router.put(
