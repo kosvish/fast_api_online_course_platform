@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<style>
+
+    .btn-login {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #457b9d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-login:hover {
+        background-color: #1d3557;
+    }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container">
+    <h1>Bad request</h1>
+    <p>{{error_detail}}</p>
+</div>
+
+{% endblock %}
