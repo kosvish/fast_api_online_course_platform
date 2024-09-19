@@ -3,65 +3,68 @@
 {% block content %}
 
 <!-- Courses Start -->
-<div class="container-fluid px-0 py-5"
-    <div class="row mx-0 justify-content-center mb-5">
-        <div class="col-lg-8">
-            <div class="section-title text-center position-relative mb-4">
-                <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Filter Courses</h6>
-                <h1 class="display-4">Find Your Perfect Course</h1>
-            </div>
-            <form action="{{ url_for('filter_courses') }}" method="GET">
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <input type="text" class="form-control" name="title" placeholder="Course Title">
-                    </div>
-
-
-                    <div class="form-group col-md-4">
-                        <select class="form-control" name="price">
-                            <option value="">Price Range</option>
-                            <option value="0-50">Under $50</option>
-                            <option value="50-100">$50 - $100</option>
-                            <option value="100-200">$100 - $200</option>
-                            <option value="200+">Over $200</option>
-                        </select>
-                    </div>
-
-
-                    <div class="form-group col-md-4">
-                        <select class="form-control" name="language">
-                            <option value="">Programming Language</option>
-                            <option value="python">Python</option>
-                            <option value="java">Java</option>
-                            <option value="go">Go</option>
-                            <option value="cpp">C++</option>
-                            <option value="csharp">C#</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Filter</button>
-            </form>
+<div class="container-fluid px-0 py-5"></div>
+<div class="row mx-0 justify-content-center mb-5">
+    <div class="col-lg-8">
+        <div class="section-title text-center position-relative mb-4">
+            <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Filter Courses</h6>
+            <h1 class="display-4">Find Your Perfect Course</h1>
         </div>
+        <form action="{{ url_for('filter_courses') }}" method="GET">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="title" placeholder="Course Title">
+                </div>
+
+
+                <div class="form-group col-md-4">
+                    <select class="form-control" name="price">
+                        <option value="">Price Range</option>
+                        <option value="0-50">Under $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100-200">$100 - $200</option>
+                        <option value="200+">Over $200</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group col-md-4">
+                    <select class="form-control" name="language">
+                        <option value="">Programming Language</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="go">Go</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
     </div>
+</div>
 
 
-    <div class="row mx-0 justify-content-center">
+<div class="container">
+    <h1>Filtered Courses</h1>
+    <div class="row">
         {% for course in courses %}
         <div class="col-md-4 mb-4">
             <div class="card border-0 shadow-sm">
-                <img class="card-img-top" src="{{ url_for('static', path='img/courses-1.jpg') }}" alt="{{ course.title }}">
+                <img class="card-img-top" src="{{ url_for('static', path='img/courses-1.jpg') }}"
+                     alt="{{ course.title }}">
                 <div class="card-body">
                     <h4 class="card-title">{{ course.title }}</h4>
                     <p class="card-text">Instructor: {{ course.creator.username }}</p>
                     <p class="card-text"><i class="fa fa-star mr-2"></i>4.5 <small>(250)</small></p>
-                    <a class="btn btn-primary" href="{{ url_for('get_courses_by_id', course_id=course.id) }}">Course Detail</a>
+                    <a class="btn btn-primary" href="{{ url_for('get_courses_by_id', course_id=course.id) }}">Course
+                        Detail</a>
                 </div>
             </div>
         </div>
+        {% else %}
+        <p>No courses found based on the selected filters.</p>
         {% endfor %}
     </div>
 </div>
-
-<!-- Courses End -->
-
 {% endblock %}
