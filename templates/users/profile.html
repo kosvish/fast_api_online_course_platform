@@ -99,5 +99,9 @@
         <li>No created courses.</li>
         {% endfor %}
     </ul>
+
+    <div class="create-course-btn">
+        <a href="{{ url_for('get_create_form') }}" class="btn btn-success">Create New Course</a>
+    </div>
 </div>
 {% endblock %}
