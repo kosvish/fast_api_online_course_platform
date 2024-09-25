@@ -1,11 +1,6 @@
 from .base import Base
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy import UniqueConstraint, ForeignKey
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from .courses import Course
-    from .users import User
 
 
 class CourseUserAssociation(Base):
