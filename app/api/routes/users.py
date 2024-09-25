@@ -1,6 +1,16 @@
 from typing import Any
 
-from fastapi import APIRouter, status, Depends, HTTPException, Request
+from fastapi import (
+    APIRouter,
+    status,
+    Depends,
+    HTTPException,
+    Request,
+    Form,
+    UploadFile,
+    File,
+)
+from pydantic import EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_async_session
@@ -150,3 +160,13 @@ async def get_user_created_courses_through_profile(
         )
         for course in created_courses
     ]
+
+
+@router.post("/profile/update-profile", status_code=status.HTTP_200_OK)
+async def update_user_profile_form(
+    username: str = Form(None),
+    email: EmailStr = Form(None),
+    password: str = Form(None),
+    image: UploadFile = File(None),
+):
+    pass
