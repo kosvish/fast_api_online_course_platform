@@ -70,7 +70,7 @@ async def get_logout(
     return response
 
 
-@router.get("/profile")
+@router.get("/profile", name='user_profile')
 async def user_profile_get(
     request: Request,
     user: UserModel = Depends(get_current_user_by_token),
@@ -104,4 +104,15 @@ async def user_profile_enrolled_course_get(
     courses = await get_user_enrolled_courses_through_profile(user, session)
     return templates.TemplateResponse(
         "/users/my_enrolled_course.html", {"request": request, "courses": courses}
+    )
+
+
+@router.get("/profile/update-profile", name='update_profile_form')
+async def user_profile_update_form_get(
+    request: Request,
+    session: AsyncSession = Depends(get_async_session),
+    user: UserModel = Depends(get_current_user_by_token),
+):
+    return templates.TemplateResponse(
+        "/users/update_profile.html", {"request": request}
     )
