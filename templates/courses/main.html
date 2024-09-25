@@ -51,7 +51,7 @@
         {% for course in courses %}
         <div class="col-md-4 mb-4">
             <div class="card border-0 shadow-sm">
-                <img class="card-img-top" src="{{ url_for('static', path='img/courses-1.jpg') }}"
+                <img class="card-img-top" src="{{ url_for('static', path=course.image_path) }}"
                      alt="{{ course.title }}">
                 <div class="card-body">
                     <h4 class="card-title">{{ course.title }}</h4>
