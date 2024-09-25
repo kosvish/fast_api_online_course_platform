@@ -19,11 +19,10 @@ from ..api.routes.courses import get_all_courses, get_course_by_id_route, enroll
 from fastapi import APIRouter
 from app.db.models import UserModel, CourseModel
 
-
 router = APIRouter()
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-images_dir = os.path.join(base_dir, "course_images")
+images_dir = os.path.join(base_dir, "static")
 
 
 @router.get("/all-courses")
@@ -49,7 +48,8 @@ async def create_course_through_form(
 ):
     img_path = None
     if image:
-        with open(f"{images_dir}/{image.filename}", "wb") as buffer:
+        img_path = f"/course_images/{image.filename}"
+        with open(f"{images_dir}/course_images/{image.filename}", "wb") as buffer:
             shutil.copyfileobj(image.file, buffer)
 
     query = select(CourseModel).where(CourseModel.title == title)
