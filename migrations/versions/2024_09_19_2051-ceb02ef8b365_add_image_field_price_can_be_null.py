@@ -26,7 +26,7 @@ def upgrade() -> None:
         sa.Column(
             "image_path",
             sa.String(),
-            server_default='f"{images_dir}/courses-1.jpg"',
+            server_default='/courses-1.jpg',
             nullable=True,
         ),
     )
