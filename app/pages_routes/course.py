@@ -69,11 +69,12 @@ async def create_course_through_form(
         creator_id=current_user.id,
     )
     session.add(new_course)
+    username = current_user.username
     await session.commit()
-    await session.refresh(
-        current_user, ["enrolled_course", "created_courses", "username", "email"]
+    current_user = await session.scalar(
+        select(UserModel).where(UserModel.username == username)
     )
-
+    await session.refresh(current_user, ["enrolled_course", "created_courses"])
     return templates.TemplateResponse(
         "/users/profile.html", {"request": request, "user": current_user}
     )
