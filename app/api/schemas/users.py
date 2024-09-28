@@ -1,5 +1,6 @@
 from typing import Optional
 
+from fastapi import Form, UploadFile, File
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
@@ -32,3 +33,9 @@ class UserSchema(BaseModel):
     model_config = ConfigDict(strict=True)
     username: str
     email: EmailStr
+
+
+class UpdateUserForm(BaseUser):
+    username: str = Form(None)
+    email: str = Form(None)
+    password: str = Form(None)
