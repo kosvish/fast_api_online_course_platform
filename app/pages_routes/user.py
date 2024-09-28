@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Form
+import os
+import shutil
+
+from fastapi import APIRouter, Form, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import RedirectResponse
 from .main import templates
-from fastapi import Request, Depends
+from fastapi import Request, Depends, status
 from typing import Annotated
 
 from ..api.auth.routes import validate_auth_user, login_user
@@ -15,7 +18,11 @@ from ..api.routes.users import (
 )
 from ..api.schemas import CreateUser
 from app.db.models import UserModel
+from ..api.schemas.users import UpdateUserForm
 
+
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+images_dir = os.path.join(base_dir, "static")
 router = APIRouter()
 
 
@@ -50,7 +57,7 @@ async def user_login_post(
         jwt_payload = {"sub": user.id, "username": user.username, "email": user.email}
         token = encode_jwt_token(jwt_payload)
         response = RedirectResponse(
-            url=request.url_for("user_profile_get"), status_code=303
+            url=request.url_for("user_profile"), status_code=303
         )
         response.set_cookie(key="access_token", value=token)
         return response
@@ -70,7 +77,7 @@ async def get_logout(
     return response
 
 
-@router.get("/profile", name='user_profile')
+@router.get("/profile", name="user_profile")
 async def user_profile_get(
     request: Request,
     user: UserModel = Depends(get_current_user_by_token),
@@ -107,7 +114,7 @@ async def user_profile_enrolled_course_get(
     )
 
 
-@router.get("/profile/update-profile", name='update_profile_form')
+@router.get("/profile/update-profile", name="update_profile_form")
 async def user_profile_update_form_get(
     request: Request,
     session: AsyncSession = Depends(get_async_session),
@@ -115,4 +122,40 @@ async def user_profile_update_form_get(
 ):
     return templates.TemplateResponse(
         "/users/update_profile.html", {"request": request}
+    )
+
+
+@router.post(
+    "/profile/update-profile",
+    status_code=status.HTTP_200_OK,
+    name="update_profile_post",
+)
+async def update_user_profile_form(
+    request: Request,
+    username: str = Form(None),
+    email: str = Form(None),
+    password: str = Form(None),
+    image: UploadFile = File(None),
+    session: AsyncSession = Depends(get_async_session),
+    current_user: UserModel = Depends(get_current_user_by_token),
+):
+    user_data_dict = {
+        "username": username,
+        "email": email,
+        "password": password,
+    }
+    for attr, value in user_data_dict.items():
+        if value is not None:
+            setattr(current_user, attr, value)
+
+    if image:
+        img_path = f"/user_images/{image.filename}"
+        with open(f"{images_dir}/user_images/{image.filename}", "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+        current_user.image_path = img_path
+
+    await session.refresh(current_user, ["enrolled_course", "created_courses"])
+    await session.commit()
+    return templates.TemplateResponse(
+        "/users/profile.html", context={"request": request, "user": current_user}
     )
