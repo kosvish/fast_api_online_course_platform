@@ -1,3 +1,4 @@
+import shutil
 from typing import Any
 
 from fastapi import (
@@ -14,6 +15,7 @@ from pydantic import EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_async_session
+from app.api.schemas.users import UpdateUserForm
 from app.crud.user import (
     create_user,
     select_user_by_id,
@@ -162,11 +164,4 @@ async def get_user_created_courses_through_profile(
     ]
 
 
-@router.post("/profile/update-profile", status_code=status.HTTP_200_OK)
-async def update_user_profile_form(
-    username: str = Form(None),
-    email: EmailStr = Form(None),
-    password: str = Form(None),
-    image: UploadFile = File(None),
-):
-    pass
+
