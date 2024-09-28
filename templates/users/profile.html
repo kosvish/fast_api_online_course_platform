@@ -26,6 +26,19 @@
         margin: 10px 0;
         color: #666;
     }
+    .profile-container img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        border: 2px solid #ccc;
+        transition: border-color 0.3s;
+    }
+
+    .profile-container img:hover {
+        border-color: #007bff;
+    }
 
     /* Стили для списка курсов */
     .profile-container ul {
@@ -75,6 +88,7 @@
 
 {% block content %}
 <div class="profile-container">
+    <img src="{{ url_for('static', path=user.image_path)}}" alt="User Profile Picture">
     <h1>{{ user.username }}</h1>
     <p>Email: {{ user.email }}</p>
 
