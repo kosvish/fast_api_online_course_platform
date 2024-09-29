@@ -72,7 +72,7 @@
 <div class="centered-container">
     <div class="update-container">
         <h2>Update Your Information</h2>
-        <form action="/pages/users/update" method="POST" enctype="application/x-www-form-urlencoded">
+        <form action="update-profile/" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username">
@@ -86,7 +86,7 @@
                 <input type="password" id="password" name="password" placeholder="Enter new password">
             </div>
             <div class="form-group">
-                <label for="image">Course Image</label>
+                <label for="image">Profile Image</label>
                 <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
             </div>
             <button type="submit" class="submit-btn">Update</button>
