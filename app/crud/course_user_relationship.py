@@ -73,16 +73,10 @@ async def delete_all_association(session: AsyncSession):
 
 
 async def select_current_user_with_courses_by_id(
-    user: UserModel, session: AsyncSession
+    current_user: UserModel, session: AsyncSession
 ) -> UserModel:
-    # query = (
-    #     select(UserModel)
-    #     .where(UserModel.id == user_id)
-    #     .options(selectinload(UserModel.enrolled_course))
-    # )
-    # user_with_course = await session.scalar(query)
-    await session.refresh(user, ["enrolled_course"])
-    return user
+    await session.refresh(current_user, ["enrolled_course"])
+    return current_user
 
 
 async def select_course_participants_by_course_id(
