@@ -115,7 +115,6 @@ async def filter_courses(
     if language:
         query = query.where(CourseModel.code_language == language.title())
     query = query.options(joinedload(CourseModel.creator))
-    print(query)
     courses = (await session.execute(query)).scalars().all()
 
     return templates.TemplateResponse(
@@ -143,8 +142,13 @@ async def get_enroll_course_route(
     current_course: CourseModel = Depends(get_course_by_id_route),
 ):
     try:
+        username = user.username
         response = await enroll_course(course_id, session, user, current_course)
-        await session.refresh(user, ["enrolled_course", "created_courses"])
+        current_user = await session.scalar(
+            select(UserModel).where(UserModel.username == username)
+        )
+        await session.refresh(current_user, ["enrolled_course", "created_courses"])
+
         if response:
             return templates.TemplateResponse(
                 "users/profile.html", context={"request": request, "user": user}
