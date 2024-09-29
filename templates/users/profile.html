@@ -94,7 +94,7 @@
 
     <h2>Enrolled Courses:</h2>
     <ul>
-        {% for course in user.enrolled_courses %}
+        {% for course in user.enrolled_course %}
         <li>
             <a href="{{ url_for('get_courses_by_id', course_id=course.id) }}">{{ course.title }}</a>
         </li>
