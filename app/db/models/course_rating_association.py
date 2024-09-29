@@ -15,8 +15,8 @@ class CourseRatingAssociation(Base):
     )
     id: Mapped[int] = mapped_column(primary_key=True)
     rating: Mapped[float] = mapped_column(nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete='CASCADE'))
+    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id", ondelete='CASCADE'))
 
     user: Mapped["User"] = relationship(back_populates="rated_courses")
     course: Mapped["Course"] = relationship(back_populates="rating_users")
