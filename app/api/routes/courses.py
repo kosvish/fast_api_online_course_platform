@@ -72,11 +72,12 @@ async def enroll_course(
     course = await select_course_with_participants_by_id(session, course_id)
     if check_user_in_course_participants(course, current_user):
         course.participants.append(current_user)
+        await session.refresh(current_user, ["enrolled_course", "created_courses"])
+        current_user.enrolled_course.append(course)
         await session.commit()
-        await session.refresh(course)
         return {
             "status": status.HTTP_200_OK,
-            "message": f"You successfully joined at course {course.title}!",
+            "message": f"You successfully joined at course!",
         }
     else:
         raise HTTPException(detail="You're already joined at this course", status_code=status.HTTP_400_BAD_REQUEST)
