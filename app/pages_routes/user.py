@@ -2,6 +2,7 @@ import os
 import shutil
 
 from fastapi import APIRouter, Form, UploadFile, File
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import RedirectResponse
 from .main import templates
@@ -18,7 +19,6 @@ from ..api.routes.users import (
 )
 from ..api.schemas import CreateUser
 from app.db.models import UserModel
-from ..api.schemas.users import UpdateUserForm
 
 
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -106,11 +106,11 @@ async def user_profile_created_course_get(
 async def user_profile_enrolled_course_get(
     request: Request,
     session: AsyncSession = Depends(get_async_session),
-    user: UserModel = Depends(get_current_user_by_token),
+    current_user: UserModel = Depends(get_current_user_by_token),
 ):
-    courses = await get_user_enrolled_courses_through_profile(user, session)
+    await get_user_enrolled_courses_through_profile(current_user, session)
     return templates.TemplateResponse(
-        "/users/my_enrolled_course.html", {"request": request, "courses": courses}
+        "/users/my_enrolled_course.html", {"request": request, "courses": current_user.enrolled_course}
     )
 
 
@@ -154,8 +154,13 @@ async def update_user_profile_form(
             shutil.copyfileobj(image.file, buffer)
         current_user.image_path = img_path
 
-    await session.refresh(current_user, ["enrolled_course", "created_courses"])
+    username = current_user.username
     await session.commit()
+    current_user = await session.scalar(
+        select(UserModel).where(UserModel.username == username)
+    )
+    await session.refresh(current_user, ["enrolled_course", "created_courses"])
+
     return templates.TemplateResponse(
         "/users/profile.html", context={"request": request, "user": current_user}
     )
