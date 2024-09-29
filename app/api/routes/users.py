@@ -121,10 +121,11 @@ async def get_user_enrolled_courses_through_profile(
     current_user: UserModel = Depends(get_current_user_by_token),
     session: AsyncSession = Depends(get_async_session),
 ):
-    user_with_courses = await select_current_user_with_courses_by_id(
+    current_user = await select_current_user_with_courses_by_id(
         current_user, session
     )
-    user_enrolled_courses: list[CourseModel] = user_with_courses.enrolled_course
+    for course in current_user.enrolled_course:
+        await session.refresh(course, ['creator'])
     return [
         CourseResponse(
             id=course.id,
@@ -136,7 +137,7 @@ async def get_user_enrolled_courses_through_profile(
             ),
             price=course.price,
         )
-        for course in user_enrolled_courses
+        for course in current_user.enrolled_course
     ]
 
 
